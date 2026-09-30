@@ -37,14 +37,27 @@ class FortifyServiceProvider extends ServiceProvider
         Fortify::redirectUserForTwoFactorAuthenticationUsing(RedirectIfTwoFactorAuthenticatable::class);
 
 
-        Fortify::registerView(function(){
-            return Inertia::render('Auth/Register');
+        Fortify::registerView(function () {
+            return Inertia::render('auth/Register');
         });
 
-        
+        Fortify::loginView(function () {
+            return Inertia::render('auth/Login');
+        });
+
+        Fortify::requestPasswordResetLinkView(function () {
+            return Inertia::render('auth/ForgotPassword');
+        });
+
+        Fortify::resetPasswordView(function ($request) {
+            return Inertia::render('auth/ResetPassword', [
+                'email' => $request->email,
+                'token' => $request->route('token'),
+            ]);
+        });
 
         RateLimiter::for('login', function (Request $request) {
-            $throttleKey = Str::transliterate(Str::lower($request->input(Fortify::username())).'|'.$request->ip());
+            $throttleKey = Str::transliterate(Str::lower($request->input(Fortify::username())) . '|' . $request->ip());
 
             return Limit::perMinute(5)->by($throttleKey);
         });
@@ -57,7 +70,7 @@ class FortifyServiceProvider extends ServiceProvider
             $credentialId = $request->input('credential.id');
 
             return Limit::perMinute(10)->by(
-                ($credentialId ?: $request->session()->getId()).'|'.$request->ip()
+                ($credentialId ?: $request->session()->getId()) . '|' . $request->ip()
             );
         });
     }
