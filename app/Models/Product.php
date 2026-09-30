@@ -9,6 +9,7 @@ class Product extends Model
 {
     protected $fillable = [
         'product_category_id',
+        'supplier_id',
         'name',
         'description',
         'price',
@@ -16,8 +17,13 @@ class Product extends Model
         'expiration_date',
     ];
 
-    public function category():BelongsTo 
+    public function category(): BelongsTo
     {
-        return $this->belongsTo(ProductCategory::class , 'product_category_id');
+        return $this->belongsTo(ProductCategory::class, 'product_category_id');
+    }
+
+    public function supplier(): BelongsTo
+    {
+        return $this->belongsTo(Supplier::class);
     }
 }

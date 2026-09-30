@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\ProductCategory;
+use App\Models\Supplier;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -11,7 +12,7 @@ class ProductController extends Controller
     // Display a listing of the resource
     public function index()
     {
-        $products = Product::latest()->get();
+        $products = Product::with(['category', 'supplier'])->latest()->get();
 
         return view('products.index', compact('products'));
     }
@@ -20,14 +21,16 @@ class ProductController extends Controller
     public function create()
     {
         $categories = ProductCategory::orderBy('name')->get();
+        $suppliers = Supplier::orderBy('name')->get();
 
-        return view('products.create', compact('categories'));
+        return view('products.create', compact('categories', 'suppliers'));
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
             'product_category_id' => 'required|exists:product_categories,id',
+            'supplier_id' => 'nullable|exists:suppliers,id',
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
@@ -45,7 +48,7 @@ class ProductController extends Controller
     // Display the specified resource
     public function show(Product $product)
     {
-        $product->load('category');
+        $product->load(['category', 'supplier']);
 
         return view('products.show', compact('product'));
     }
@@ -54,14 +57,16 @@ class ProductController extends Controller
     public function edit(Product $product)
     {
         $categories = ProductCategory::orderBy('name')->get();
+        $suppliers = Supplier::orderBy('name')->get();
 
-        return view('products.edit', compact('product', 'categories'));
+        return view('products.edit', compact('product', 'categories', 'suppliers'));
     }
 
     public function update(Request $request, Product $product)
     {
         $validated = $request->validate([
             'product_category_id' => 'required|exists:product_categories,id',
+            'supplier_id' => 'nullable|exists:suppliers,id',
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',

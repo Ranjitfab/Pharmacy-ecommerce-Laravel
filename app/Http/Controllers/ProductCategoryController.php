@@ -11,7 +11,7 @@ class ProductCategoryController extends Controller
     //Display a listing of the resource
     public function index()
     {
-        $categories = ProductCategory::latest()->get();
+        $categories = ProductCategory::withCount('products')->latest()->get();
 
         return view('product-categories.index', compact('categories'));
     }
@@ -21,8 +21,6 @@ class ProductCategoryController extends Controller
     {
         return view('product-categories.create');
     }
-
-
 
     public function store(Request $request)
     {
@@ -41,11 +39,10 @@ class ProductCategoryController extends Controller
     //Display the specified resource
     public function show(ProductCategory $productCategory)
     {
-        $productCategory->load('products');
+        $productCategory->load('products.supplier');
 
         return view('product-categories.show', compact('productCategory'));
     }
-
 
     //Show the form for editing a specified resource
     public function edit(ProductCategory $productCategory)
@@ -65,7 +62,6 @@ class ProductCategoryController extends Controller
             ->route('product-categories.index')
             ->with('success', 'Category updated successfully');
     }
-
 
     //Remove specified resource from storage
     public function destroy(ProductCategory $productCategory)
