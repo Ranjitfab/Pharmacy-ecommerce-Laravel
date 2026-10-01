@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\ShopController;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\User;
@@ -12,6 +15,15 @@ Route::get('/', function () {
 
 Route::get('/react-demo', function () {
     return Inertia::render('Welcome');
+});
+
+Route::middleware(['auth', 'role:user'])->group(function () {
+    Route::get('/shop', ShopController::class)->name('shop.index');
+    Route::post('/cart/items', [CartController::class, 'add'])->name('cart.items.store');
+    Route::patch('/cart/items/{cartItem}', [CartController::class, 'update'])->name('cart.items.update');
+    Route::delete('/cart/items/{cartItem}', [CartController::class, 'remove'])->name('cart.items.destroy');
+    Route::get('/checkout', [CheckoutController::class, 'create'])->name('checkout.create');
+    Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
 });
 
 Route::get('/dashboard', function () {
