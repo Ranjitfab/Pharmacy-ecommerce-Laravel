@@ -36,6 +36,12 @@ export default function Dashboard({ adminName, stats, alerts }) {
             >
                 Suppliers
             </a>
+            <Link
+                href="/orders"
+                className="rounded-md px-4 py-3 text-sm font-medium text-[#5c6663] transition-colors hover:bg-[#f4f7f6] hover:text-[#237b65]"
+            >
+                Manage orders
+            </Link>
         </nav>
     );
 
@@ -176,6 +182,12 @@ export default function Dashboard({ adminName, stats, alerts }) {
                                 >
                                     Add product
                                 </a>
+                                <Link
+                                    href="/orders"
+                                    className="rounded-md border border-[#dce5e1] bg-white px-4 py-2.5 text-sm font-medium text-[#43524c] transition-colors hover:border-[#b8d3c9] hover:bg-[#f8fbf9]"
+                                >
+                                    Manage orders
+                                </Link>
                             </div>
                         </section>
                     </main>

@@ -3,22 +3,48 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
-use App\Models\Product;
 use App\Models\OrderItem;
+use App\Models\Product;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class OrderController extends Controller
 {
-    public function index()
+    public function index(Request $request): Response
     {
-        $orders = Order::with('user')->latest()->get();
-        return view('orders.index', compact('orders'));
+        $orders = Order::query()
+            ->with(['user:id,name', 'items.product:id,name'])
+            ->orderByDesc('id')
+            ->paginate(15)
+            ->through(fn (Order $order): array => [
+                'id' => $order->id,
+                'customerName' => $order->user?->name ?? 'Unknown customer',
+                'date' => $order->order_date?->format('M j, Y'),
+                'totalAmount' => number_format((float) $order->total_amount, 2, '.', ''),
+                'status' => $order->status,
+                'items' => $order->items->map(fn (OrderItem $item): array => [
+                    'productName' => $item->product?->name ?? 'Deleted product',
+                    'quantity' => $item->quantity,
+                    'price' => number_format((float) $item->price_at_purchase, 2, '.', ''),
+                    'subtotal' => number_format((float) $item->price_at_purchase * $item->quantity, 2, '.', ''),
+                ])->values(),
+            ]);
+
+        return Inertia::render('Orders/Index', [
+            'adminName' => $request->user()->name,
+            'orders' => $orders,
+            'success' => $request->session()->get('success'),
+        ]);
     }
 
     public function show(Order $order)
     {
         $order->load(['user', 'items.product']);
+
         return view('orders.show', compact('order'));
     }
 
@@ -40,7 +66,7 @@ class OrderController extends Controller
 
             foreach ($validated['items'] as $item) {
                 $product = Product::findOrFail($item['product_id']);
-                
+
                 // Check stock
                 if ($product->stock < $item['quantity']) {
                     throw new \Exception("Insufficient stock for {$product->name}");
@@ -71,21 +97,21 @@ class OrderController extends Controller
             DB::commit();
 
             return redirect()->route('orders.show', $order)->with('success', 'Order placed successfully');
-
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->with('error', 'Error placing order: ' . $e->getMessage());
+
+            return back()->with('error', 'Error placing order: '.$e->getMessage());
         }
     }
 
-    public function updateStatus(Request $request, Order $order)
+    public function updateStatus(Request $request, Order $order): RedirectResponse
     {
         $validated = $request->validate([
-            'status' => 'required|in:pending,shipped,delivered,cancelled',
+            'status' => ['required', Rule::in(['pending', 'shipped', 'delivered', 'cancelled'])],
         ]);
 
         $order->update(['status' => $validated['status']]);
 
-        return redirect()->back()->with('success', 'Order status updated');
+        return redirect()->route('orders.index')->with('success', 'Order status updated.');
     }
 }

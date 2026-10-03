@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ShopController;
 use App\Models\Order;
 use App\Models\Product;
@@ -26,6 +27,11 @@ Route::middleware(['auth', 'role:user'])->group(function () {
     Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
 });
 
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+    Route::patch('/orders/{order}/status', [OrderController::class, 'updateStatus'])->name('orders.update-status');
+});
+
 Route::get('/dashboard', function () {
     $today = today()->toDateString();
     $expiringSoon = today()->addDays(30)->toDateString();
@@ -35,10 +41,10 @@ Route::get('/dashboard', function () {
         ->orderBy('expiration_date')
         ->limit(5)
         ->get(['name', 'expiration_date'])
-        ->map(fn(Product $product): array => [
+        ->map(fn (Product $product): array => [
             'type' => 'expired',
             'title' => 'Expired product',
-            'message' => $product->name . ' expired on ' . $product->expiration_date,
+            'message' => $product->name.' expired on '.$product->expiration_date,
         ]);
 
     $expiringSoonAlerts = Product::query()
@@ -47,10 +53,10 @@ Route::get('/dashboard', function () {
         ->orderBy('expiration_date')
         ->limit(5)
         ->get(['name', 'expiration_date'])
-        ->map(fn(Product $product): array => [
+        ->map(fn (Product $product): array => [
             'type' => 'expiring_soon',
             'title' => 'Expiring soon',
-            'message' => $product->name . ' expires on ' . $product->expiration_date,
+            'message' => $product->name.' expires on '.$product->expiration_date,
         ]);
 
     $lowStockAlerts = Product::query()
@@ -58,10 +64,10 @@ Route::get('/dashboard', function () {
         ->orderBy('stock')
         ->limit(5)
         ->get(['name', 'stock'])
-        ->map(fn(Product $product): array => [
+        ->map(fn (Product $product): array => [
             'type' => 'low_stock',
             'title' => 'Low stock',
-            'message' => $product->name . ' has ' . $product->stock . ' units remaining',
+            'message' => $product->name.' has '.$product->stock.' units remaining',
         ]);
 
     return Inertia::render('Dashboard', [
@@ -78,6 +84,6 @@ Route::get('/dashboard', function () {
     ]);
 })->middleware(['auth', 'role:admin'])->name('dashboard');
 
-require __DIR__ . '/product-categories.php';
-require __DIR__ . '/products.php';
-require __DIR__ . '/suppliers.php';
+require __DIR__.'/product-categories.php';
+require __DIR__.'/products.php';
+require __DIR__.'/suppliers.php';

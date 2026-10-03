@@ -48,6 +48,13 @@
         >
             Suppliers
         </a>
+        <a
+            href="{{ route('orders.index') }}"
+            @if (request()->routeIs('orders.*')) aria-current="page" @endif
+            class="rounded-md px-4 py-3 text-sm font-medium no-underline transition-colors {{ request()->routeIs('orders.*') ? 'bg-[#e7f2ef] font-semibold text-[#237b65]' : 'text-[#5c6663] hover:bg-[#f4f7f6] hover:text-[#237b65]' }}"
+        >
+            Manage orders
+        </a>
     </nav>
 
     <div class="hidden border-t border-[#e6ece9] p-4 md:block">
