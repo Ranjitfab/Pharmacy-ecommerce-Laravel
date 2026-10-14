@@ -68,9 +68,29 @@
                 </div>
 
                 <div>
+                    <label for="dosage" class="mb-1.5 block text-sm font-medium text-[#35443e]">Dosage <span class="font-normal text-[#818c88]">(optional)</span></label>
+                    <input id="dosage" type="text" name="dosage" value="{{ old('dosage', $product->dosage) }}" placeholder="e.g. 500 mg" class="w-full rounded-md border border-[#d8e0dc] bg-white px-3 py-2.5 text-sm text-[#26332f] outline-none placeholder:text-[#929b97] focus:border-[#237b65] focus:ring-2 focus:ring-[#237b65]/15" @error('dosage') aria-invalid="true" aria-describedby="dosage-error" @enderror>
+                    @error('dosage') <p id="dosage-error" class="mb-0 mt-1.5 text-sm text-red-700">{{ $message }}</p> @enderror
+                </div>
+
+                <div>
+                    <label for="strength" class="mb-1.5 block text-sm font-medium text-[#35443e]">Strength <span class="font-normal text-[#818c88]">(optional)</span></label>
+                    <input id="strength" type="text" name="strength" value="{{ old('strength', $product->strength) }}" placeholder="e.g. 30 tablets" class="w-full rounded-md border border-[#d8e0dc] bg-white px-3 py-2.5 text-sm text-[#26332f] outline-none placeholder:text-[#929b97] focus:border-[#237b65] focus:ring-2 focus:ring-[#237b65]/15" @error('strength') aria-invalid="true" aria-describedby="strength-error" @enderror>
+                    @error('strength') <p id="strength-error" class="mb-0 mt-1.5 text-sm text-red-700">{{ $message }}</p> @enderror
+                </div>
+
+                <div>
                     <label for="expiration_date" class="mb-1.5 block text-sm font-medium text-[#35443e]">Expiration date <span class="font-normal text-[#818c88]">(optional)</span></label>
                     <input id="expiration_date" type="date" name="expiration_date" value="{{ old('expiration_date', $product->expiration_date) }}" class="w-full rounded-md border border-[#d8e0dc] bg-white px-3 py-2.5 text-sm text-[#26332f] outline-none focus:border-[#237b65] focus:ring-2 focus:ring-[#237b65]/15" @error('expiration_date') aria-invalid="true" aria-describedby="expiration-error" @enderror>
                     @error('expiration_date') <p id="expiration-error" class="mb-0 mt-1.5 text-sm text-red-700">{{ $message }}</p> @enderror
+                </div>
+
+                <div class="sm:col-span-2">
+                    <label class="inline-flex items-center gap-2 rounded-md border border-[#d8e0dc] bg-[#f8faf9] px-3 py-2.5 text-sm font-medium text-[#35443e]">
+                        <input type="checkbox" name="requires_prescription" value="1" @checked(old('requires_prescription', $product->requires_prescription))>
+                        Requires prescription
+                    </label>
+                    @error('requires_prescription') <p class="mb-0 mt-1.5 text-sm text-red-700">{{ $message }}</p> @enderror
                 </div>
 
                 <div class="sm:col-span-2">

@@ -33,11 +33,13 @@ class ShopController extends Controller
             })
             ->when($search !== '', function (Builder $query) use ($search): void {
                 $query->where(function (Builder $query) use ($search): void {
-                    $query->where('name', 'like', '%' . $search . '%')
-                        ->orWhere('description', 'like', '%' . $search . '%');
+                    $query->where('name', 'like', '%'.$search.'%')
+                        ->orWhere('description', 'like', '%'.$search.'%')
+                        ->orWhere('dosage', 'like', '%'.$search.'%')
+                        ->orWhere('strength', 'like', '%'.$search.'%');
                 });
             })
-            ->when($categoryId, fn(Builder $query): Builder => $query->where('product_category_id', $categoryId));
+            ->when($categoryId, fn (Builder $query): Builder => $query->where('product_category_id', $categoryId));
 
         match ($sort) {
             'price_asc' => $products->orderBy('price')->orderBy('name'),

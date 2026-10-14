@@ -12,9 +12,16 @@ class Product extends Model
         'supplier_id',
         'name',
         'description',
+        'dosage',
+        'strength',
+        'requires_prescription',
         'price',
         'stock',
         'expiration_date',
+    ];
+
+    protected $casts = [
+        'requires_prescription' => 'boolean',
     ];
 
     public function category(): BelongsTo

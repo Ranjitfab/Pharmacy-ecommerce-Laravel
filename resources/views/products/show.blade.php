@@ -45,6 +45,14 @@
                 <dd class="mb-0 mt-1 text-sm font-medium tabular-nums text-[#35443e]">₱{{ number_format((float) $product->price, 2) }}</dd>
             </div>
             <div class="border-b border-[#edf1ef] px-5 py-4 sm:px-7">
+                <dt class="text-xs font-semibold uppercase text-[#818c88]">Dosage</dt>
+                <dd class="mb-0 mt-1 text-sm font-medium text-[#35443e]">{{ $product->dosage ?: 'Not specified' }}</dd>
+            </div>
+            <div class="border-b border-[#edf1ef] px-5 py-4 sm:px-7">
+                <dt class="text-xs font-semibold uppercase text-[#818c88]">Strength</dt>
+                <dd class="mb-0 mt-1 text-sm font-medium text-[#35443e]">{{ $product->strength ?: 'Not specified' }}</dd>
+            </div>
+            <div class="border-b border-[#edf1ef] px-5 py-4 sm:px-7">
                 <dt class="text-xs font-semibold uppercase text-[#818c88]">Stock on hand</dt>
                 <dd class="mb-0 mt-1 text-sm font-medium tabular-nums text-[#35443e]">{{ $product->stock }} units</dd>
             </div>
@@ -52,6 +60,12 @@
                 <dt class="text-xs font-semibold uppercase text-[#818c88]">Expiration date</dt>
                 <dd class="mb-0 mt-1 text-sm font-medium text-[#35443e]">
                     {{ $product->expiration_date ? \Illuminate\Support\Carbon::parse($product->expiration_date)->format('M j, Y') : 'Not set' }}
+                </dd>
+            </div>
+            <div class="border-b border-[#edf1ef] px-5 py-4 sm:px-7">
+                <dt class="text-xs font-semibold uppercase text-[#818c88]">Prescription status</dt>
+                <dd class="mb-0 mt-1 text-sm font-medium text-[#35443e]">
+                    {{ $product->requires_prescription ? 'Prescription required' : 'No prescription required' }}
                 </dd>
             </div>
             <div class="px-5 py-5 sm:col-span-2 sm:px-7">
