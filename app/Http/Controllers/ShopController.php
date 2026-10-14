@@ -19,11 +19,13 @@ class ShopController extends Controller
             'search' => ['nullable', 'string', 'max:100'],
             'category' => ['nullable', 'integer', Rule::exists('product_categories', 'id')],
             'sort' => ['nullable', Rule::in(['newest', 'price_asc', 'price_desc', 'name'])],
+            'availability' => ['nullable', Rule::in(['all', 'in_stock', 'sold_out'])],
         ]);
 
         $search = trim($filters['search'] ?? '');
         $categoryId = $filters['category'] ?? null;
         $sort = $filters['sort'] ?? 'newest';
+        $availability = $filters['availability'] ?? 'all';
 
         $products = Product::query()
             ->with('category:id,name')
@@ -39,7 +41,9 @@ class ShopController extends Controller
                         ->orWhere('strength', 'like', '%'.$search.'%');
                 });
             })
-            ->when($categoryId, fn (Builder $query): Builder => $query->where('product_category_id', $categoryId));
+            ->when($categoryId, fn (Builder $query): Builder => $query->where('product_category_id', $categoryId))
+            ->when($availability === 'in_stock', fn (Builder $query): Builder => $query->where('stock', '>', 0))
+            ->when($availability === 'sold_out', fn (Builder $query): Builder => $query->where('stock', 0));
 
         match ($sort) {
             'price_asc' => $products->orderBy('price')->orderBy('name'),
@@ -70,6 +74,7 @@ class ShopController extends Controller
                 'search' => $search,
                 'category' => $categoryId,
                 'sort' => $sort,
+                'availability' => $availability,
             ],
         ]);
     }

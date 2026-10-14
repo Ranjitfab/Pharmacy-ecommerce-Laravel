@@ -13,6 +13,7 @@ export default function Shop({ customerName, products, categories, filters, cart
         search: filters.search ?? '',
         category: filters.category ? String(filters.category) : '',
         sort: filters.sort ?? 'newest',
+        availability: filters.availability ?? 'all',
     });
 
     const visitShop = (nextFilters) => {
@@ -38,6 +39,12 @@ export default function Shop({ customerName, products, categories, filters, cart
         const value = event.target.value;
         setData('sort', value);
         visitShop({ ...data, sort: value, page: 1 });
+    };
+
+    const selectAvailability = (event) => {
+        const value = event.target.value;
+        setData('availability', value);
+        visitShop({ ...data, availability: value, page: 1 });
     };
 
     const addToCart = (product) => {
@@ -136,6 +143,19 @@ export default function Shop({ customerName, products, categories, filters, cart
                                         <option value="price_asc">Price: low to high</option>
                                         <option value="price_desc">Price: high to low</option>
                                         <option value="name">Name</option>
+                                    </select>
+                                </label>
+
+                                <label className="flex items-center gap-2 text-sm text-[#69766f]">
+                                    <span className="shrink-0">Availability</span>
+                                    <select
+                                        value={data.availability}
+                                        onChange={selectAvailability}
+                                        className="min-w-40 rounded-md border border-[#dce4df] bg-white px-3 py-2.5 text-sm font-medium text-[#43524b] outline-none focus:border-[#237b65] focus:ring-2 focus:ring-[#237b65]/15"
+                                    >
+                                        <option value="all">All products</option>
+                                        <option value="in_stock">In stock</option>
+                                        <option value="sold_out">Sold out</option>
                                     </select>
                                 </label>
                             </div>
