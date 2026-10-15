@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -14,7 +13,7 @@ class RolePermissionSeeder extends Seeder
      */
     public function run(): void
     {
-        //permissions
+        // permissions
         $permissions = [
             'view products',
             'create products',
@@ -32,11 +31,21 @@ class RolePermissionSeeder extends Seeder
             'name' => 'admin',
         ]);
 
+        $manager = Role::firstOrCreate([
+            'name' => 'manager',
+        ]);
+
         $user = Role::firstOrCreate([
             'name' => 'user',
         ]);
 
         $admin->givePermissionTo($permissions);
+
+        $manager->givePermissionTo([
+            'view products',
+            'create products',
+            'edit products',
+        ]);
 
         $user->givePermissionTo(
             'view products',

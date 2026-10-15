@@ -34,6 +34,11 @@ class AdminDashboardTest extends TestCase
 
     public function test_admin_receives_dashboard_and_summary_props(): void
     {
+        Role::create([
+            'name' => 'user',
+            'guard_name' => 'web',
+        ]);
+
         $admin = User::factory()->create();
         $admin->assignRole(Role::create([
             'name' => 'admin',
@@ -41,9 +46,10 @@ class AdminDashboardTest extends TestCase
         ]));
 
         $response = $this->actingAs($admin)->get('/dashboard');
+        $response->assertOk();
 
         $response->assertInertia(
-            fn(Assert $page) => $page
+            fn (Assert $page) => $page
                 ->component('Dashboard')
                 ->where('adminName', $admin->name)
                 ->where('stats.products', 0)
