@@ -4,14 +4,16 @@ import CartDrawer from '../components/CartDrawer';
 import ProductCard from '../components/ProductCard';
 import ShopHeader from '../components/ShopHeader';
 
-export default function Shop({ customerName, products, categories, filters, cart, success }) {
+export default function Shop({ customerName, products, categories, filters, cart, wishlistProductIds, wishlistCount, success }) {
     const [cartOpen, setCartOpen] = useState(false);
     const [addingProductId, setAddingProductId] = useState(null);
+    const [updatingWishlistProductId, setUpdatingWishlistProductId] = useState(null);
     const { errors = {} } = usePage().props;
     const { data, setData } = useForm({
         search: filters.search ?? '',
         category: filters.category ? String(filters.category) : '',
         sort: filters.sort ?? 'newest',
+        availability: filters.availability ?? 'all',
     });
 
     const visitShop = (nextFilters) => {
@@ -39,6 +41,12 @@ export default function Shop({ customerName, products, categories, filters, cart
         visitShop({ ...data, sort: value, page: 1 });
     };
 
+    const selectAvailability = (event) => {
+        const value = event.target.value;
+        setData('availability', value);
+        visitShop({ ...data, availability: value, page: 1 });
+    };
+
     const addToCart = (product) => {
         setAddingProductId(product.id);
         router.post('/cart/items', { product_id: product.id, quantity: 1 }, {
@@ -49,6 +57,22 @@ export default function Shop({ customerName, products, categories, filters, cart
         });
     };
 
+    const toggleWishlist = (product) => {
+        const isWishlisted = wishlistProductIds.includes(product.id);
+        setUpdatingWishlistProductId(product.id);
+
+        const options = {
+            preserveScroll: true,
+            onFinish: () => setUpdatingWishlistProductId(null),
+        };
+
+        if (isWishlisted) {
+            router.delete(`/wishlist/${product.id}`, options);
+        } else {
+            router.post(`/wishlist/${product.id}`, {}, options);
+        }
+    };
+
     return (
         <>
             <Head title="Shop" />
@@ -56,6 +80,7 @@ export default function Shop({ customerName, products, categories, filters, cart
                 <ShopHeader
                     customerName={customerName}
                     cartCount={cart.itemCount}
+                    wishlistCount={wishlistCount}
                     onOpenCart={() => setCartOpen(true)}
                 />
 
@@ -120,6 +145,19 @@ export default function Shop({ customerName, products, categories, filters, cart
                                         <option value="name">Name</option>
                                     </select>
                                 </label>
+
+                                <label className="flex items-center gap-2 text-sm text-[#69766f]">
+                                    <span className="shrink-0">Availability</span>
+                                    <select
+                                        value={data.availability}
+                                        onChange={selectAvailability}
+                                        className="min-w-40 rounded-md border border-[#dce4df] bg-white px-3 py-2.5 text-sm font-medium text-[#43524b] outline-none focus:border-[#237b65] focus:ring-2 focus:ring-[#237b65]/15"
+                                    >
+                                        <option value="all">All products</option>
+                                        <option value="in_stock">In stock</option>
+                                        <option value="sold_out">Sold out</option>
+                                    </select>
+                                </label>
                             </div>
                         </div>
 
@@ -153,6 +191,9 @@ export default function Shop({ customerName, products, categories, filters, cart
                                         product={product}
                                         onAdd={addToCart}
                                         adding={addingProductId === product.id}
+                                        isWishlisted={wishlistProductIds.includes(product.id)}
+                                        onToggleWishlist={toggleWishlist}
+                                        wishlistBusy={updatingWishlistProductId === product.id}
                                     />
                                 ))}
                             </div>

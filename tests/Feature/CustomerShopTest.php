@@ -71,17 +71,80 @@ class CustomerShopTest extends TestCase
         ]));
 
         $response->assertInertia(
-            fn(Assert $page) => $page
+            fn (Assert $page) => $page
                 ->component('Shop')
                 ->where('customerName', $customer->name)
                 ->where('filters.search', 'Vitamin')
                 ->where('filters.sort', 'price_asc')
+                ->where('filters.availability', 'all')
                 ->where('products.total', 2)
                 ->where('products.data.0.name', 'Vitamin D')
                 ->where('products.data.0.stock', 0)
                 ->where('products.data.0.category.name', 'Vitamins')
                 ->where('products.data.1.name', 'Vitamin C')
         );
+    }
+
+    public function test_customer_can_filter_products_that_are_in_stock(): void
+    {
+        $customer = User::factory()->create();
+        $customer->assignRole(Role::create([
+            'name' => 'user',
+            'guard_name' => 'web',
+        ]));
+
+        $category = ProductCategory::create(['name' => 'Vitamins']);
+        $availableProduct = Product::create([
+            'product_category_id' => $category->id,
+            'name' => 'Available Vitamin',
+            'price' => '12.50',
+            'stock' => 4,
+        ]);
+        Product::create([
+            'product_category_id' => $category->id,
+            'name' => 'Sold Out Vitamin',
+            'price' => '9.50',
+            'stock' => 0,
+        ]);
+
+        $this->actingAs($customer)
+            ->get(route('shop.index', ['availability' => 'in_stock']))
+            ->assertInertia(fn (Assert $page) => $page
+                ->component('Shop')
+                ->where('filters.availability', 'in_stock')
+                ->where('products.total', 1)
+                ->where('products.data.0.id', $availableProduct->id));
+    }
+
+    public function test_customer_can_filter_products_that_are_sold_out(): void
+    {
+        $customer = User::factory()->create();
+        $customer->assignRole(Role::create([
+            'name' => 'user',
+            'guard_name' => 'web',
+        ]));
+
+        $category = ProductCategory::create(['name' => 'Vitamins']);
+        Product::create([
+            'product_category_id' => $category->id,
+            'name' => 'Available Vitamin',
+            'price' => '12.50',
+            'stock' => 4,
+        ]);
+        $soldOutProduct = Product::create([
+            'product_category_id' => $category->id,
+            'name' => 'Sold Out Vitamin',
+            'price' => '9.50',
+            'stock' => 0,
+        ]);
+
+        $this->actingAs($customer)
+            ->get(route('shop.index', ['availability' => 'sold_out']))
+            ->assertInertia(fn (Assert $page) => $page
+                ->component('Shop')
+                ->where('filters.availability', 'sold_out')
+                ->where('products.total', 1)
+                ->where('products.data.0.id', $soldOutProduct->id));
     }
 
     public function test_registration_assigns_the_customer_role_and_redirects_to_shop(): void
