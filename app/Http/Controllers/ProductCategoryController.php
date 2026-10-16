@@ -2,24 +2,30 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\ProductCategory;
+use Illuminate\Http\Request;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class ProductCategoryController extends Controller
 {
-
-    //Display a listing of the resource
-    public function index()
+    public function index(): Response
     {
         $categories = ProductCategory::withCount('products')->latest()->get();
 
-        return view('product-categories.index', compact('categories'));
+        return Inertia::render('ProductCategories/Index', [
+            'categories' => $categories,
+            'baseUrl' => route('product-categories.index'),
+            'success' => session('success'),
+        ]);
     }
 
-    //Show the form for creating a new resource
-    public function create()
+    public function create(): Response
     {
-        return view('product-categories.create');
+        return Inertia::render('ProductCategories/Form', [
+            'item' => null,
+            'baseUrl' => route('product-categories.index'),
+        ]);
     }
 
     public function store(Request $request)
@@ -36,18 +42,23 @@ class ProductCategoryController extends Controller
             ->with('success', 'Category created successfully');
     }
 
-    //Display the specified resource
-    public function show(ProductCategory $productCategory)
+    public function show(ProductCategory $productCategory): Response
     {
         $productCategory->load('products.supplier');
 
-        return view('product-categories.show', compact('productCategory'));
+        return Inertia::render('ProductCategories/Show', [
+            'item' => $productCategory,
+            'baseUrl' => route('product-categories.index'),
+            'productsUrl' => route('products.index'),
+        ]);
     }
 
-    //Show the form for editing a specified resource
-    public function edit(ProductCategory $productCategory)
+    public function edit(ProductCategory $productCategory): Response
     {
-        return view('product-categories.edit', compact('productCategory'));
+        return Inertia::render('ProductCategories/Form', [
+            'item' => $productCategory,
+            'baseUrl' => route('product-categories.index'),
+        ]);
     }
 
     public function update(Request $request, ProductCategory $productCategory)
@@ -58,15 +69,17 @@ class ProductCategoryController extends Controller
         ]);
 
         $productCategory->update($validated);
+
         return redirect()
             ->route('product-categories.index')
             ->with('success', 'Category updated successfully');
     }
 
-    //Remove specified resource from storage
+    // Remove specified resource from storage
     public function destroy(ProductCategory $productCategory)
     {
         $productCategory->delete();
+
         return redirect()
             ->route('product-categories.index')
             ->with('success', 'Category deleted successfully');

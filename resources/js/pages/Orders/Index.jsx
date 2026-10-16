@@ -132,10 +132,10 @@ export default function OrdersIndex({ adminName, orders, success }) {
                     </div>
                     <nav aria-label="Admin navigation" className="flex flex-1 flex-col gap-2 p-4">
                         <Link href="/dashboard" className="rounded-md px-4 py-3 text-sm font-medium text-[#5c6663] transition-colors hover:bg-[#f4f7f6] hover:text-[#237b65]">Dashboard</Link>
-                        <a href="/product-category/products" className="rounded-md px-4 py-3 text-sm font-medium text-[#5c6663] transition-colors hover:bg-[#f4f7f6] hover:text-[#237b65]">Manage products</a>
+                        <a href="/product-category/products" className="rounded-md px-4 py-3 text-sm font-medium text-[#5c6663] transition-colors hover:bg-[#f4f7f6] hover:text-[#237b65]">Products</a>
                         <a href="/product-category/product-categories" className="rounded-md px-4 py-3 text-sm font-medium text-[#5c6663] transition-colors hover:bg-[#f4f7f6] hover:text-[#237b65]">Product categories</a>
                         <a href="/suppliers" className="rounded-md px-4 py-3 text-sm font-medium text-[#5c6663] transition-colors hover:bg-[#f4f7f6] hover:text-[#237b65]">Suppliers</a>
-                        <Link href="/orders" aria-current="page" className="rounded-md bg-[#e7f2ef] px-4 py-3 text-sm font-semibold text-[#237b65]">Manage orders</Link>
+                        <Link href="/orders" aria-current="page" className="rounded-md bg-[#e7f2ef] px-4 py-3 text-sm font-semibold text-[#237b65]">Orders</Link>
                     </nav>
                     <div className="border-t border-[#e6ece9] p-4">
                         <button
@@ -159,7 +159,7 @@ export default function OrdersIndex({ adminName, orders, success }) {
                         </div>
                         <nav aria-label="Admin navigation" className="flex flex-wrap gap-2">
                             <Link href="/dashboard" className="rounded-md px-3 py-2 text-sm text-[#5c6663] hover:bg-[#f4f7f6]">Dashboard</Link>
-                            <a href="/product-category/products" className="rounded-md px-3 py-2 text-sm text-[#5c6663] hover:bg-[#f4f7f6]">Manage products</a>
+                            <a href="/product-category/products" className="rounded-md px-3 py-2 text-sm text-[#5c6663] hover:bg-[#f4f7f6]">Products</a>
                             <a href="/product-category/product-categories" className="rounded-md px-3 py-2 text-sm text-[#5c6663] hover:bg-[#f4f7f6]">Product categories</a>
                             <a href="/suppliers" className="rounded-md px-3 py-2 text-sm text-[#5c6663] hover:bg-[#f4f7f6]">Suppliers</a>
                             <Link href="/orders" aria-current="page" className="rounded-md bg-[#e7f2ef] px-3 py-2 text-sm font-semibold text-[#237b65]">Orders</Link>

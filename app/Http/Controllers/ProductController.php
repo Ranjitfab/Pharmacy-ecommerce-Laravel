@@ -6,24 +6,33 @@ use App\Models\Product;
 use App\Models\ProductCategory;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class ProductController extends Controller
 {
-    // Display a listing of the resource
-    public function index()
+    public function index(): Response
     {
         $products = Product::with(['category', 'supplier'])->latest()->get();
 
-        return view('products.index', compact('products'));
+        return Inertia::render('Products/Index', [
+            'products' => $products,
+            'baseUrl' => route('products.index'),
+            'success' => session('success'),
+        ]);
     }
 
-    // Show the form for creating a new resource
-    public function create()
+    public function create(): Response
     {
         $categories = ProductCategory::orderBy('name')->get();
         $suppliers = Supplier::orderBy('name')->get();
 
-        return view('products.create', compact('categories', 'suppliers'));
+        return Inertia::render('Products/Form', [
+            'item' => null,
+            'baseUrl' => route('products.index'),
+            'categories' => $categories,
+            'suppliers' => $suppliers,
+        ]);
     }
 
     public function store(Request $request)
@@ -48,21 +57,27 @@ class ProductController extends Controller
             ->with('success', 'Product created successfully');
     }
 
-    // Display the specified resource
-    public function show(Product $product)
+    public function show(Product $product): Response
     {
         $product->load(['category', 'supplier']);
 
-        return view('products.show', compact('product'));
+        return Inertia::render('Products/Show', [
+            'item' => $product,
+            'baseUrl' => route('products.index'),
+        ]);
     }
 
-    // Show the form for editing a specified resource
-    public function edit(Product $product)
+    public function edit(Product $product): Response
     {
         $categories = ProductCategory::orderBy('name')->get();
         $suppliers = Supplier::orderBy('name')->get();
 
-        return view('products.edit', compact('product', 'categories', 'suppliers'));
+        return Inertia::render('Products/Form', [
+            'item' => $product,
+            'baseUrl' => route('products.index'),
+            'categories' => $categories,
+            'suppliers' => $suppliers,
+        ]);
     }
 
     public function update(Request $request, Product $product)
