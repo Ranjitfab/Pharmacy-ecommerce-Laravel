@@ -7,8 +7,9 @@ const alertStyles = {
 };
 
 export default function Dashboard({ adminName, stats, alerts }) {
-    const { url } = usePage();
+    const { url, props: { auth } } = usePage();
     const currentPath = url.split('?')[0];
+    const roleLabel = auth?.user?.roles?.includes('admin') ? 'Admin' : 'Manager';
     const logout = () => router.post('/logout');
 
     const navigationItems = [
@@ -44,7 +45,7 @@ export default function Dashboard({ adminName, stats, alerts }) {
 
     return (
         <>
-            <Head title="Admin dashboard" />
+            <Head title={`${roleLabel} dashboard`} />
 
             <div className="min-h-screen bg-[#f4f7f6] text-[#26332f] md:flex">
                 <aside className="hidden w-64 shrink-0 flex-col border-r border-[#e6ece9] bg-white md:flex">
@@ -92,7 +93,7 @@ export default function Dashboard({ adminName, stats, alerts }) {
                         <header className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
                             <div>
                                 <p className="mb-2 mt-0 text-xs font-semibold uppercase text-[#71807b]">
-                                    Admin overview
+                                    {roleLabel} overview
                                 </p>
                                 <h1 className="m-0 text-2xl font-bold text-[#26332f]">
                                     Welcome, {adminName}
@@ -102,7 +103,7 @@ export default function Dashboard({ adminName, stats, alerts }) {
                                 </p>
                             </div>
                             <span className="w-fit rounded-full border border-[#cde2da] bg-white px-3 py-1.5 text-xs font-semibold text-[#237b65]">
-                                Administrator
+                                {roleLabel === 'Admin' ? 'Administrator' : 'Manager'}
                             </span>
                         </header>
 
@@ -136,7 +137,7 @@ export default function Dashboard({ adminName, stats, alerts }) {
                         <section className="mb-8" aria-labelledby="alerts-heading">
                             <div className="mb-4 flex items-center justify-between gap-4">
                                 <h2 id="alerts-heading" className="m-0 text-lg font-bold text-[#26332f]">
-                                    Admin alerts
+                                    {roleLabel} alerts
                                 </h2>
                                 <span className="rounded-full bg-white px-2.5 py-1 text-xs font-semibold tabular-nums text-[#71807b]">
                                     {alerts.length}

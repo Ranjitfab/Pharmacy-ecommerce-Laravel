@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::name('product-categories.')
     ->prefix('product-category')
-    ->middleware(['auth', 'role:admin'])
+    ->middleware(['auth', 'role:admin|manager'])
     ->group(function () {
         Route::get('/product-categories', [ProductCategoryController::class, 'index'])
             ->name('index');
@@ -26,5 +26,6 @@ Route::name('product-categories.')
             ->name('update');
 
         Route::delete('/product-categories/{productCategory}', [ProductCategoryController::class, 'destroy'])
+            ->middleware('role:admin')
             ->name('destroy');
     });

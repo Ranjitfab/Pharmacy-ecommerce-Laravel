@@ -7,7 +7,7 @@ export default function ResourceShow({ resource, item, baseUrl, productsUrl }) {
     const definition = resourceDefinitions[resource];
     const canEdit = resource === 'products'
         ? (auth?.user?.permissions ?? []).includes('edit products')
-        : (auth?.user?.roles ?? []).includes('admin');
+        : (auth?.user?.roles ?? []).some((role) => role === 'admin' || role === 'manager');
     const relatedProducts = item.products ?? [];
 
     return (

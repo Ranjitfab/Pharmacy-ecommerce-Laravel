@@ -103,6 +103,28 @@ class AdminOrdersTest extends TestCase
         ]);
     }
 
+    public function test_manager_can_view_orders_and_update_their_status(): void
+    {
+        $this->seed(RolePermissionSeeder::class);
+        $manager = User::factory()->create();
+        $manager->assignRole(Role::findByName('manager', 'web'));
+        $order = $this->createOrder();
+
+        $this->actingAs($manager)->get(route('orders.index'))
+            ->assertInertia(fn (Assert $page) => $page
+                ->component('Orders/Index')
+                ->where('orders.data.0.id', $order->id));
+
+        $this->actingAs($manager)->patch(route('orders.update-status', $order), [
+            'status' => 'shipped',
+        ])->assertRedirectToRoute('orders.index');
+
+        $this->assertDatabaseHas('orders', [
+            'id' => $order->id,
+            'status' => 'shipped',
+        ]);
+    }
+
     public function test_admin_cannot_set_an_unrecognized_order_status(): void
     {
         $admin = $this->createAdmin();

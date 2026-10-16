@@ -31,7 +31,7 @@ Route::middleware(['auth', 'role:user'])->group(function () {
     Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
 });
 
-Route::middleware(['auth', 'role:admin'])->group(function () {
+Route::middleware(['auth', 'role:admin|manager'])->group(function () {
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
     Route::patch('/orders/{order}/status', [OrderController::class, 'updateStatus'])->name('orders.update-status');
 });
@@ -86,7 +86,7 @@ Route::get('/dashboard', function () {
             ->concat($lowStockAlerts)
             ->values(),
     ]);
-})->middleware(['auth', 'role:admin'])->name('dashboard');
+})->middleware(['auth', 'role:admin|manager'])->name('dashboard');
 
 require __DIR__.'/product-categories.php';
 require __DIR__.'/products.php';

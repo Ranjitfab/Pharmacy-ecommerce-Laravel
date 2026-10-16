@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\User;
+use Database\Seeders\RolePermissionSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Inertia\Testing\AssertableInertia as Assert;
 use Spatie\Permission\Models\Role;
@@ -57,5 +58,20 @@ class AdminDashboardTest extends TestCase
                 ->where('stats.customers', 0)
                 ->has('alerts', 0)
         );
+    }
+
+    public function test_manager_can_view_the_admin_dashboard(): void
+    {
+        $this->seed(RolePermissionSeeder::class);
+        $manager = User::factory()->create();
+        $manager->assignRole(Role::findByName('manager', 'web'));
+
+        $this->actingAs($manager)->get('/dashboard')
+            ->assertInertia(
+                fn (Assert $page) => $page
+                    ->component('Dashboard')
+                    ->where('adminName', $manager->name)
+                    ->where('auth.user.roles.0', 'manager')
+            );
     }
 }

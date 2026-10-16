@@ -1,11 +1,11 @@
 import { Head, Link, router, usePage } from '@inertiajs/react';
 
 const navigation = [
-    { label: 'Dashboard', href: '/dashboard', role: 'admin' },
+    { label: 'Dashboard', href: '/dashboard', roles: ['admin', 'manager'] },
     { label: 'Products', href: '/product-category/products', permission: 'view products' },
-    { label: 'Product categories', href: '/product-category/product-categories', role: 'admin' },
-    { label: 'Suppliers', href: '/suppliers', role: 'admin' },
-    { label: 'Orders', href: '/orders', role: 'admin' },
+    { label: 'Product categories', href: '/product-category/product-categories', roles: ['admin', 'manager'] },
+    { label: 'Suppliers', href: '/suppliers', roles: ['admin', 'manager'] },
+    { label: 'Orders', href: '/orders', roles: ['admin', 'manager'] },
 ];
 
 export default function AdminLayout({ title, success, children }) {
@@ -23,7 +23,7 @@ export default function AdminLayout({ title, success, children }) {
                         return permissions.includes(item.permission);
                     }
 
-                    return roles.includes(item.role);
+                    return item.roles.some((role) => roles.includes(role));
                 })
                 .map((item) => {
                     const isActive = currentPath === item.href || currentPath.startsWith(`${item.href}/`);
