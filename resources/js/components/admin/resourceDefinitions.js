@@ -12,6 +12,7 @@ export const resourceDefinitions = {
             { name: 'supplier_id', label: 'Supplier', type: 'select', options: 'suppliers', emptyLabel: 'Unassigned', optional: true },
             { name: 'price', label: 'Price', type: 'number', required: true, min: '0', step: '0.01' },
             { name: 'stock', label: 'Stock', type: 'number', required: true, min: '0' },
+            { name: 'reorder_threshold', label: 'Reorder threshold', type: 'number', required: true, min: '0', defaultValue: 5 },
             { name: 'dosage', label: 'Dosage', type: 'text', optional: true },
             { name: 'strength', label: 'Strength', type: 'text', optional: true },
             { name: 'expiration_date', label: 'Expiration date', type: 'date', optional: true },
@@ -24,6 +25,7 @@ export const resourceDefinitions = {
             { label: 'Supplier', path: 'supplier.name', fallback: 'Unassigned' },
             { label: 'Price', path: 'price', format: 'currency' },
             { label: 'Stock', path: 'stock', format: 'stock' },
+            { label: 'Reorder threshold', path: 'reorder_threshold', format: 'units' },
             { label: 'Expiration', path: 'expiration_date', format: 'date', fallback: 'Not set' },
         ],
         details: [
@@ -33,6 +35,7 @@ export const resourceDefinitions = {
             { label: 'Dosage', path: 'dosage', fallback: 'Not specified' },
             { label: 'Strength', path: 'strength', fallback: 'Not specified' },
             { label: 'Stock on hand', path: 'stock', format: 'units' },
+            { label: 'Reorder threshold', path: 'reorder_threshold', format: 'units' },
             { label: 'Expiration date', path: 'expiration_date', format: 'date', fallback: 'Not set' },
             { label: 'Prescription status', path: 'requires_prescription', format: 'prescription' },
             { label: 'Description', path: 'description', fallback: 'No description provided.', wide: true },

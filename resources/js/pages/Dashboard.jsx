@@ -14,6 +14,7 @@ export default function Dashboard({ adminName, stats, alerts }) {
 
     const navigationItems = [
         { label: 'Dashboard', href: '/dashboard' },
+        { label: 'Notifications', href: '/notifications' },
         { label: 'Products', href: '/product-category/products' },
         { label: 'Product categories', href: '/product-category/product-categories' },
         { label: 'Suppliers', href: '/suppliers' },
@@ -139,9 +140,9 @@ export default function Dashboard({ adminName, stats, alerts }) {
                                 <h2 id="alerts-heading" className="m-0 text-lg font-bold text-[#26332f]">
                                     {roleLabel} alerts
                                 </h2>
-                                <span className="rounded-full bg-white px-2.5 py-1 text-xs font-semibold tabular-nums text-[#71807b]">
-                                    {alerts.length}
-                                </span>
+                                <Link href="/notifications" className="text-sm font-semibold text-[#237b65] underline-offset-4 hover:underline">
+                                    View all ({alerts.length})
+                                </Link>
                             </div>
 
                             {alerts.length > 0 ? (

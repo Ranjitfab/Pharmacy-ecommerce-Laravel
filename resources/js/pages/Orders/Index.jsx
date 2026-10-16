@@ -132,6 +132,7 @@ export default function OrdersIndex({ adminName, orders, success }) {
                     </div>
                     <nav aria-label="Admin navigation" className="flex flex-1 flex-col gap-2 p-4">
                         <Link href="/dashboard" className="rounded-md px-4 py-3 text-sm font-medium text-[#5c6663] transition-colors hover:bg-[#f4f7f6] hover:text-[#237b65]">Dashboard</Link>
+                        <Link href="/notifications" className="rounded-md px-4 py-3 text-sm font-medium text-[#5c6663] transition-colors hover:bg-[#f4f7f6] hover:text-[#237b65]">Notifications</Link>
                         <a href="/product-category/products" className="rounded-md px-4 py-3 text-sm font-medium text-[#5c6663] transition-colors hover:bg-[#f4f7f6] hover:text-[#237b65]">Products</a>
                         <a href="/product-category/product-categories" className="rounded-md px-4 py-3 text-sm font-medium text-[#5c6663] transition-colors hover:bg-[#f4f7f6] hover:text-[#237b65]">Product categories</a>
                         <a href="/suppliers" className="rounded-md px-4 py-3 text-sm font-medium text-[#5c6663] transition-colors hover:bg-[#f4f7f6] hover:text-[#237b65]">Suppliers</a>
@@ -159,6 +160,7 @@ export default function OrdersIndex({ adminName, orders, success }) {
                         </div>
                         <nav aria-label="Admin navigation" className="flex flex-wrap gap-2">
                             <Link href="/dashboard" className="rounded-md px-3 py-2 text-sm text-[#5c6663] hover:bg-[#f4f7f6]">Dashboard</Link>
+                            <Link href="/notifications" className="rounded-md px-3 py-2 text-sm text-[#5c6663] hover:bg-[#f4f7f6]">Notifications</Link>
                             <a href="/product-category/products" className="rounded-md px-3 py-2 text-sm text-[#5c6663] hover:bg-[#f4f7f6]">Products</a>
                             <a href="/product-category/product-categories" className="rounded-md px-3 py-2 text-sm text-[#5c6663] hover:bg-[#f4f7f6]">Product categories</a>
                             <a href="/suppliers" className="rounded-md px-3 py-2 text-sm text-[#5c6663] hover:bg-[#f4f7f6]">Suppliers</a>

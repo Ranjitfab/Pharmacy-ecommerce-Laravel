@@ -47,6 +47,7 @@ class ProductController extends Controller
             'requires_prescription' => 'nullable|boolean',
             'price' => 'required|numeric|min:0',
             'stock' => 'required|integer|min:0',
+            'reorder_threshold' => 'required|integer|min:0',
             'expiration_date' => 'nullable|date',
         ]);
 
@@ -92,6 +93,7 @@ class ProductController extends Controller
             'requires_prescription' => 'nullable|boolean',
             'price' => 'required|numeric|min:0',
             'stock' => 'required|integer|min:0',
+            'reorder_threshold' => 'required|integer|min:0',
             'expiration_date' => 'nullable|date',
         ]);
 

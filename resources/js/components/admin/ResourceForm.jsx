@@ -9,7 +9,7 @@ export default function ResourceForm({ resource, item, baseUrl, categories = [],
     const isEditing = Boolean(item);
     const initialData = Object.fromEntries(definition.fields.map((field) => {
         const value = item?.[field.name];
-        return [field.name, field.type === 'checkbox' ? Boolean(value) : value ?? ''];
+        return [field.name, field.type === 'checkbox' ? Boolean(value) : value ?? field.defaultValue ?? ''];
     }));
     const { data, setData, post, put, processing, errors } = useForm(initialData);
     const title = `${isEditing ? 'Edit' : 'Add'} ${definition.singular}`;

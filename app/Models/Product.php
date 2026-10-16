@@ -18,6 +18,7 @@ class Product extends Model
         'requires_prescription',
         'price',
         'stock',
+        'reorder_threshold',
         'expiration_date',
     ];
 

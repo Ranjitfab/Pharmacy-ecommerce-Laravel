@@ -42,7 +42,7 @@ class ProductControllerTest extends TestCase
 
         $this->actingAs($user)->get(route('products.index'))
             ->assertInertia(
-                fn (Assert $page) => $page
+                fn(Assert $page) => $page
                     ->component('Products/Index')
                     ->where('auth.user.roles.0', 'user')
                     ->where('auth.user.permissions.0', 'view products')
@@ -69,10 +69,10 @@ class ProductControllerTest extends TestCase
         ]);
 
         $this->actingAs($manager)->get(route('products.create'))
-            ->assertInertia(fn (Assert $page) => $page->component('Products/Form'));
+            ->assertInertia(fn(Assert $page) => $page->component('Products/Form'));
 
         $this->actingAs($manager)->get(route('products.edit', $product))
-            ->assertInertia(fn (Assert $page) => $page->component('Products/Form'));
+            ->assertInertia(fn(Assert $page) => $page->component('Products/Form'));
 
         $this->actingAs($manager)->delete(route('products.destroy', $product))
             ->assertForbidden();
@@ -90,7 +90,7 @@ class ProductControllerTest extends TestCase
         $response = $this->actingAs($admin)->get(route('products.create'));
 
         $response->assertInertia(
-            fn (Assert $page) => $page
+            fn(Assert $page) => $page
                 ->component('Products/Form')
                 ->where('item', null)
                 ->has('categories', 1)
@@ -112,7 +112,7 @@ class ProductControllerTest extends TestCase
 
         $this->actingAs($admin)->get(route('products.index'))
             ->assertInertia(
-                fn (Assert $page) => $page
+                fn(Assert $page) => $page
                     ->component('Products/Index')
                     ->has('products', 1)
                     ->where('products.0.name', $product->name)
@@ -120,7 +120,7 @@ class ProductControllerTest extends TestCase
 
         $this->actingAs($admin)->get(route('products.show', $product))
             ->assertInertia(
-                fn (Assert $page) => $page
+                fn(Assert $page) => $page
                     ->component('Products/Show')
                     ->where('item.id', $product->id)
                     ->where('item.category.name', $category->name)
@@ -128,7 +128,7 @@ class ProductControllerTest extends TestCase
 
         $this->actingAs($admin)->get(route('products.edit', $product))
             ->assertInertia(
-                fn (Assert $page) => $page
+                fn(Assert $page) => $page
                     ->component('Products/Form')
                     ->where('item.id', $product->id)
                     ->has('categories', 1)
@@ -156,6 +156,7 @@ class ProductControllerTest extends TestCase
             'requires_prescription' => true,
             'price' => '12.50',
             'stock' => 5,
+            'reorder_threshold' => 12,
             'expiration_date' => null,
         ]);
 
@@ -171,6 +172,7 @@ class ProductControllerTest extends TestCase
             'requires_prescription' => true,
             'price' => '12.50',
             'stock' => 5,
+            'reorder_threshold' => 12,
         ]);
     }
 
