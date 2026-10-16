@@ -1,4 +1,4 @@
-import { Head, Link, useForm } from '@inertiajs/react';
+import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import { validateField } from '../../validation';
 
 const loginFields = {
@@ -7,6 +7,7 @@ const loginFields = {
 };
 
 export default function Login() {
+    const { status } = usePage().props;
     const { data, setData, post, processing, errors, setError, clearErrors } = useForm({
         email: '',
         password: '',
@@ -39,6 +40,12 @@ export default function Login() {
                     <h1 className="mb-6 mt-0 text-center text-2xl font-bold text-[#333]">
                         Login
                     </h1>
+
+                    {status && (
+                        <p role="status" className="mb-5 rounded-md border border-[#b8d9ca] bg-[#e9f5ee] px-4 py-3 text-sm text-[#245c43]">
+                            {status}
+                        </p>
+                    )}
 
                     <form onSubmit={submit} className="flex flex-col gap-4">
                         <div>
@@ -87,6 +94,12 @@ export default function Login() {
                                     {errors.password}
                                 </p>
                             )}
+                        </div>
+
+                        <div className="-mt-2 flex justify-end">
+                            <Link href="/forgot-password" className="text-sm font-semibold text-[#237b65] underline-offset-4 hover:underline">
+                                Forgot password?
+                            </Link>
                         </div>
 
                         <label htmlFor="remember" className="flex min-h-6 cursor-pointer items-center gap-2 text-sm text-[#555]">
