@@ -1,4 +1,4 @@
-import { Head, Link, router } from '@inertiajs/react';
+import { Head, Link, router, usePage } from '@inertiajs/react';
 
 const alertStyles = {
     expired: 'border-red-500 bg-red-50 text-red-900',
@@ -7,41 +7,38 @@ const alertStyles = {
 };
 
 export default function Dashboard({ adminName, stats, alerts }) {
+    const { url } = usePage();
+    const currentPath = url.split('?')[0];
     const logout = () => router.post('/logout');
+
+    const navigationItems = [
+        { label: 'Dashboard', href: '/dashboard' },
+        { label: 'Products', href: '/product-category/products' },
+        { label: 'Product categories', href: '/product-category/product-categories' },
+        { label: 'Suppliers', href: '/suppliers' },
+        { label: 'Orders', href: '/orders' },
+    ];
 
     const navigation = (
         <nav className="flex flex-wrap gap-2 md:flex-col">
-            <Link
-                href="/dashboard"
-                aria-current="page"
-                className="rounded-md bg-[#e7f2ef] px-4 py-3 text-sm font-semibold text-[#237b65]"
-            >
-                Dashboard
-            </Link>
-            <a
-                href="/product-category/products"
-                className="rounded-md px-4 py-3 text-sm font-medium text-[#5c6663] transition-colors hover:bg-[#f4f7f6] hover:text-[#237b65]"
-            >
-                Manage products
-            </a>
-            <a
-                href="/product-category/product-categories"
-                className="rounded-md px-4 py-3 text-sm font-medium text-[#5c6663] transition-colors hover:bg-[#f4f7f6] hover:text-[#237b65]"
-            >
-                Product categories
-            </a>
-            <a
-                href="/suppliers"
-                className="rounded-md px-4 py-3 text-sm font-medium text-[#5c6663] transition-colors hover:bg-[#f4f7f6] hover:text-[#237b65]"
-            >
-                Suppliers
-            </a>
-            <Link
-                href="/orders"
-                className="rounded-md px-4 py-3 text-sm font-medium text-[#5c6663] transition-colors hover:bg-[#f4f7f6] hover:text-[#237b65]"
-            >
-                Manage orders
-            </Link>
+            {navigationItems.map((item) => {
+                const isActive = currentPath === item.href || currentPath.startsWith(`${item.href}/`);
+
+                return (
+                    <Link
+                        key={item.href}
+                        href={item.href}
+                        aria-current={isActive ? 'page' : undefined}
+                        className={`rounded-md px-4 py-3 text-sm transition-colors ${
+                            isActive
+                                ? 'bg-[#e7f2ef] font-semibold text-[#237b65]'
+                                : 'font-medium text-[#5c6663] hover:bg-[#f4f7f6] hover:text-[#237b65]'
+                        }`}
+                    >
+                        {item.label}
+                    </Link>
+                );
+            })}
         </nav>
     );
 

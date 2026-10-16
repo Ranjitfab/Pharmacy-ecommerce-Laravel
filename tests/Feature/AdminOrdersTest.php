@@ -7,6 +7,7 @@ use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\ProductCategory;
 use App\Models\User;
+use Database\Seeders\RolePermissionSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Inertia\Testing\AssertableInertia as Assert;
 use Spatie\Permission\Models\Role;
@@ -63,7 +64,7 @@ class AdminOrdersTest extends TestCase
         $response = $this->actingAs($admin)->get(route('orders.index'));
 
         $response->assertInertia(
-            fn(Assert $page) => $page
+            fn (Assert $page) => $page
                 ->component('Orders/Index')
                 ->where('orders.data.0.id', $order->id)
                 ->where('orders.data.0.customerName', 'Casey Customer')
@@ -74,15 +75,15 @@ class AdminOrdersTest extends TestCase
         );
     }
 
-    public function test_products_page_keeps_orders_in_the_shared_admin_sidebar(): void
+    public function test_admin_can_open_the_inertia_product_page_with_admin_permissions(): void
     {
         $admin = $this->createAdmin();
 
-        $response = $this->actingAs($admin)->get(route('products.index'));
-
-        $response->assertSee('Administration');
-        $response->assertSee('Manage orders');
-        $response->assertSee(route('orders.index'));
+        $this->actingAs($admin)->get(route('products.index'))
+            ->assertInertia(fn (Assert $page) => $page
+                ->component('Products/Index')
+                ->where('auth.user.roles.0', 'admin')
+                ->has('auth.user.permissions', 4));
     }
 
     public function test_admin_can_update_an_order_status(): void
@@ -120,11 +121,9 @@ class AdminOrdersTest extends TestCase
 
     private function createAdmin(): User
     {
+        $this->seed(RolePermissionSeeder::class);
         $admin = User::factory()->create();
-        $admin->assignRole(Role::create([
-            'name' => 'admin',
-            'guard_name' => 'web',
-        ]));
+        $admin->assignRole(Role::findByName('admin', 'web'));
 
         return $admin;
     }
