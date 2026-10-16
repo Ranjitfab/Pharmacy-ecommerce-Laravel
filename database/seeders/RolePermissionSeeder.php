@@ -19,6 +19,16 @@ class RolePermissionSeeder extends Seeder
             'create products',
             'edit products',
             'delete products',
+            'view categories',
+            'create categories',
+            'edit categories',
+            'delete categories',
+            'view suppliers',
+            'create suppliers',
+            'edit suppliers',
+            'delete suppliers',
+            'view orders',
+            'update orders',
         ];
 
         foreach ($permissions as $permission) {
@@ -45,6 +55,14 @@ class RolePermissionSeeder extends Seeder
             'view products',
             'create products',
             'edit products',
+            'view categories',
+            'create categories',
+            'edit categories',
+            'view suppliers',
+            'create suppliers',
+            'edit suppliers',
+            'view orders',
+            'update orders',
         ]);
 
         $user->givePermissionTo(

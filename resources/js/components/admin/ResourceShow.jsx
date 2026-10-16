@@ -5,9 +5,7 @@ import { formatValue, resourceDefinitions, resolveValue } from './resourceDefini
 export default function ResourceShow({ resource, item, baseUrl, productsUrl }) {
     const { auth } = usePage().props;
     const definition = resourceDefinitions[resource];
-    const canEdit = resource === 'products'
-        ? (auth?.user?.permissions ?? []).includes('edit products')
-        : (auth?.user?.roles ?? []).some((role) => role === 'admin' || role === 'manager');
+    const canEdit = (auth?.user?.permissions ?? []).includes(`edit ${resource}`);
     const relatedProducts = item.products ?? [];
 
     return (

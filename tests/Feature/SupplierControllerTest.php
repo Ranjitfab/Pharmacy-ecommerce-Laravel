@@ -49,11 +49,7 @@ class SupplierControllerTest extends TestCase
 
     public function test_admin_can_create_a_supplier(): void
     {
-        $admin = User::factory()->create();
-        $admin->assignRole(Role::create([
-            'name' => 'admin',
-            'guard_name' => 'web',
-        ]));
+        $admin = $this->createAdmin();
 
         $response = $this->actingAs($admin)->post(route('suppliers.store'), [
             'name' => 'Northstar Medical',
@@ -73,16 +69,12 @@ class SupplierControllerTest extends TestCase
 
     public function test_admin_supplier_management_pages_render_inertia_components(): void
     {
-        $admin = User::factory()->create();
-        $admin->assignRole(Role::create([
-            'name' => 'admin',
-            'guard_name' => 'web',
-        ]));
+        $admin = $this->createAdmin();
         $supplier = Supplier::create(['name' => 'Northstar Medical']);
 
         $this->actingAs($admin)->get(route('suppliers.index'))
             ->assertInertia(
-                fn (Assert $page) => $page
+                fn(Assert $page) => $page
                     ->component('Suppliers/Index')
                     ->has('suppliers', 1)
                     ->where('suppliers.0.name', $supplier->name)
@@ -90,21 +82,21 @@ class SupplierControllerTest extends TestCase
 
         $this->actingAs($admin)->get(route('suppliers.create'))
             ->assertInertia(
-                fn (Assert $page) => $page
+                fn(Assert $page) => $page
                     ->component('Suppliers/Form')
                     ->where('item', null)
             );
 
         $this->actingAs($admin)->get(route('suppliers.show', $supplier))
             ->assertInertia(
-                fn (Assert $page) => $page
+                fn(Assert $page) => $page
                     ->component('Suppliers/Show')
                     ->where('item.id', $supplier->id)
             );
 
         $this->actingAs($admin)->get(route('suppliers.edit', $supplier))
             ->assertInertia(
-                fn (Assert $page) => $page
+                fn(Assert $page) => $page
                     ->component('Suppliers/Form')
                     ->where('item.id', $supplier->id)
             );
@@ -118,12 +110,12 @@ class SupplierControllerTest extends TestCase
         $supplier = Supplier::create(['name' => 'Northstar Medical']);
 
         $this->actingAs($manager)->get(route('suppliers.index'))
-            ->assertInertia(fn (Assert $page) => $page
+            ->assertInertia(fn(Assert $page) => $page
                 ->component('Suppliers/Index')
                 ->has('suppliers', 1));
 
         $this->actingAs($manager)->get(route('suppliers.create'))
-            ->assertInertia(fn (Assert $page) => $page->component('Suppliers/Form'));
+            ->assertInertia(fn(Assert $page) => $page->component('Suppliers/Form'));
 
         $this->actingAs($manager)->put(route('suppliers.update', $supplier), [
             'name' => 'Updated Medical Supply',
@@ -140,5 +132,14 @@ class SupplierControllerTest extends TestCase
             'id' => $supplier->id,
             'name' => 'Updated Medical Supply',
         ]);
+    }
+
+    private function createAdmin(): User
+    {
+        $this->seed(RolePermissionSeeder::class);
+        $admin = User::factory()->create();
+        $admin->assignRole(Role::findByName('admin', 'web'));
+
+        return $admin;
     }
 }

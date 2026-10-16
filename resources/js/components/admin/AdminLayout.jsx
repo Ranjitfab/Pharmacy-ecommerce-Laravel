@@ -4,9 +4,9 @@ const navigation = [
     { label: 'Dashboard', href: '/dashboard', roles: ['admin', 'manager'] },
     { label: 'Notifications', href: '/notifications', roles: ['admin', 'manager'] },
     { label: 'Products', href: '/product-category/products', permission: 'view products' },
-    { label: 'Product categories', href: '/product-category/product-categories', roles: ['admin', 'manager'] },
-    { label: 'Suppliers', href: '/suppliers', roles: ['admin', 'manager'] },
-    { label: 'Orders', href: '/orders', roles: ['admin', 'manager'] },
+    { label: 'Product categories', href: '/product-category/product-categories', permission: 'view categories' },
+    { label: 'Suppliers', href: '/suppliers', permission: 'view suppliers' },
+    { label: 'Orders', href: '/orders', permission: 'view orders' },
 ];
 
 export default function AdminLayout({ title, success, children }) {

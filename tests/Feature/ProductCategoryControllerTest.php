@@ -16,16 +16,14 @@ class ProductCategoryControllerTest extends TestCase
 
     public function test_admin_category_management_pages_render_inertia_components(): void
     {
+        $this->seed(RolePermissionSeeder::class);
         $admin = User::factory()->create();
-        $admin->assignRole(Role::create([
-            'name' => 'admin',
-            'guard_name' => 'web',
-        ]));
+        $admin->assignRole(Role::findByName('admin', 'web'));
         $category = ProductCategory::create(['name' => 'Medicine']);
 
         $this->actingAs($admin)->get(route('product-categories.index'))
             ->assertInertia(
-                fn (Assert $page) => $page
+                fn(Assert $page) => $page
                     ->component('ProductCategories/Index')
                     ->has('categories', 1)
                     ->where('categories.0.name', $category->name)
@@ -33,21 +31,21 @@ class ProductCategoryControllerTest extends TestCase
 
         $this->actingAs($admin)->get(route('product-categories.create'))
             ->assertInertia(
-                fn (Assert $page) => $page
+                fn(Assert $page) => $page
                     ->component('ProductCategories/Form')
                     ->where('item', null)
             );
 
         $this->actingAs($admin)->get(route('product-categories.show', $category))
             ->assertInertia(
-                fn (Assert $page) => $page
+                fn(Assert $page) => $page
                     ->component('ProductCategories/Show')
                     ->where('item.id', $category->id)
             );
 
         $this->actingAs($admin)->get(route('product-categories.edit', $category))
             ->assertInertia(
-                fn (Assert $page) => $page
+                fn(Assert $page) => $page
                     ->component('ProductCategories/Form')
                     ->where('item.id', $category->id)
             );
@@ -61,15 +59,15 @@ class ProductCategoryControllerTest extends TestCase
         $category = ProductCategory::create(['name' => 'Medicine']);
 
         $this->actingAs($manager)->get(route('product-categories.index'))
-            ->assertInertia(fn (Assert $page) => $page
+            ->assertInertia(fn(Assert $page) => $page
                 ->component('ProductCategories/Index')
                 ->has('categories', 1));
 
         $this->actingAs($manager)->get(route('product-categories.create'))
-            ->assertInertia(fn (Assert $page) => $page->component('ProductCategories/Form'));
+            ->assertInertia(fn(Assert $page) => $page->component('ProductCategories/Form'));
 
         $this->actingAs($manager)->get(route('product-categories.edit', $category))
-            ->assertInertia(fn (Assert $page) => $page->component('ProductCategories/Form'));
+            ->assertInertia(fn(Assert $page) => $page->component('ProductCategories/Form'));
 
         $this->actingAs($manager)->put(route('product-categories.update', $category), [
             'name' => 'Updated Medicine',

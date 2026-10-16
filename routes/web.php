@@ -30,10 +30,15 @@ Route::middleware(['auth', 'role:user'])->group(function () {
     Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
 });
 
-Route::middleware(['auth', 'role:admin|manager'])->group(function () {
-    Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
-    Route::patch('/orders/{order}/status', [OrderController::class, 'updateStatus'])->name('orders.update-status');
+Route::get('/orders', [OrderController::class, 'index'])
+    ->middleware(['auth', 'permission:view orders'])
+    ->name('orders.index');
 
+Route::patch('/orders/{order}/status', [OrderController::class, 'updateStatus'])
+    ->middleware(['auth', 'permission:update orders'])
+    ->name('orders.update-status');
+
+Route::middleware(['auth', 'role:admin|manager'])->group(function () {
     Route::get('/notifications', function (GetInventoryAlerts $getInventoryAlerts) {
         return Inertia::render('Notifications/Index', [
             'alerts' => $getInventoryAlerts->handle(),
@@ -53,6 +58,6 @@ Route::get('/dashboard', function (GetInventoryAlerts $getInventoryAlerts) {
     ]);
 })->middleware(['auth', 'role:admin|manager'])->name('dashboard');
 
-require __DIR__.'/product-categories.php';
-require __DIR__.'/products.php';
-require __DIR__.'/suppliers.php';
+require __DIR__ . '/product-categories.php';
+require __DIR__ . '/products.php';
+require __DIR__ . '/suppliers.php';

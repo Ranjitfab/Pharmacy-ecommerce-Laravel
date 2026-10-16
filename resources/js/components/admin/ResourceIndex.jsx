@@ -7,14 +7,9 @@ export default function ResourceIndex({ resource, records, baseUrl, success }) {
     const [deletingId, setDeletingId] = useState(null);
     const { auth } = usePage().props;
     const permissions = auth?.user?.permissions ?? [];
-    const roles = auth?.user?.roles ?? [];
-    const canManageByRole = resource !== 'products'
-        && roles.some((role) => role === 'admin' || role === 'manager');
-    const canCreate = canManageByRole || permissions.includes(`create ${resource}`);
-    const canEdit = canManageByRole || permissions.includes(`edit ${resource}`);
-    const canDelete = resource === 'products'
-        ? permissions.includes('delete products')
-        : roles.includes('admin');
+    const canCreate = permissions.includes(`create ${resource}`);
+    const canEdit = permissions.includes(`edit ${resource}`);
+    const canDelete = permissions.includes(`delete ${resource}`);
     const definition = resourceDefinitions[resource];
 
     const deleteRecord = (record) => {

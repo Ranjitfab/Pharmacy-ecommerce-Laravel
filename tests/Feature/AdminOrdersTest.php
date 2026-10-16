@@ -64,7 +64,7 @@ class AdminOrdersTest extends TestCase
         $response = $this->actingAs($admin)->get(route('orders.index'));
 
         $response->assertInertia(
-            fn (Assert $page) => $page
+            fn(Assert $page) => $page
                 ->component('Orders/Index')
                 ->where('orders.data.0.id', $order->id)
                 ->where('orders.data.0.customerName', 'Casey Customer')
@@ -80,10 +80,10 @@ class AdminOrdersTest extends TestCase
         $admin = $this->createAdmin();
 
         $this->actingAs($admin)->get(route('products.index'))
-            ->assertInertia(fn (Assert $page) => $page
+            ->assertInertia(fn(Assert $page) => $page
                 ->component('Products/Index')
                 ->where('auth.user.roles.0', 'admin')
-                ->has('auth.user.permissions', 4));
+                ->has('auth.user.permissions', 14));
     }
 
     public function test_admin_can_update_an_order_status(): void
@@ -111,7 +111,7 @@ class AdminOrdersTest extends TestCase
         $order = $this->createOrder();
 
         $this->actingAs($manager)->get(route('orders.index'))
-            ->assertInertia(fn (Assert $page) => $page
+            ->assertInertia(fn(Assert $page) => $page
                 ->component('Orders/Index')
                 ->where('orders.data.0.id', $order->id));
 
