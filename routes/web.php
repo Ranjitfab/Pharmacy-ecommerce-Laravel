@@ -3,9 +3,9 @@
 use App\Actions\Inventory\GetInventoryAlerts;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\MyOrdersController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ShopController;
-use App\Http\Controllers\WishlistController;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\User;
@@ -22,9 +22,7 @@ Route::get('/react-demo', function () {
 
 Route::middleware(['auth', 'role:user'])->group(function () {
     Route::get('/shop', ShopController::class)->name('shop.index');
-    Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
-    Route::post('/wishlist/{product}', [WishlistController::class, 'store'])->name('wishlist.items.store');
-    Route::delete('/wishlist/{product}', [WishlistController::class, 'destroy'])->name('wishlist.items.destroy');
+    Route::get('/my-orders', [MyOrdersController::class, 'index'])->name('my-orders.index');
     Route::post('/cart/items', [CartController::class, 'add'])->name('cart.items.store');
     Route::patch('/cart/items/{cartItem}', [CartController::class, 'update'])->name('cart.items.update');
     Route::delete('/cart/items/{cartItem}', [CartController::class, 'remove'])->name('cart.items.destroy');

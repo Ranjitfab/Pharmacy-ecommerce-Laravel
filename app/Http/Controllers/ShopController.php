@@ -56,7 +56,6 @@ class ShopController extends Controller
             ->with('items.product')
             ->where('user_id', $request->user()->id)
             ->first();
-        $wishlistProductIds = $request->user()->wishlist()->pluck('products.id')->all();
 
         return Inertia::render('Shop', [
             'customerName' => $request->user()->name,
@@ -67,8 +66,6 @@ class ShopController extends Controller
                 'itemCount' => 0,
                 'subtotal' => '0.00',
             ],
-            'wishlistProductIds' => $wishlistProductIds,
-            'wishlistCount' => count($wishlistProductIds),
             'success' => $request->session()->get('success'),
             'filters' => [
                 'search' => $search,

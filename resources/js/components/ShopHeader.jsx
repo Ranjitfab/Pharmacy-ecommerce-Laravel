@@ -1,33 +1,36 @@
-import { Link, router } from '@inertiajs/react';
+import { Link, router, usePage } from '@inertiajs/react';
 
-export default function ShopHeader({ customerName, cartCount, wishlistCount, onOpenCart }) {
+export default function ShopHeader({ customerName, cartCount, onOpenCart }) {
+    const currentPath = usePage().url.split('?')[0];
+
     return (
         <header className="border-b border-[#e4e9e4] bg-white">
-            <div className="mx-auto flex min-h-18 max-w-7xl items-center justify-between gap-4 px-5 sm:px-8">
-                <div className="flex items-center gap-8">
+            <div className="mx-auto flex min-h-18 max-w-7xl flex-wrap items-center gap-x-4 gap-y-2 px-5 py-3 sm:flex-nowrap sm:px-8">
+                <div className="flex items-center gap-5 sm:gap-8">
                     <Link href="/shop" className="flex items-center gap-2 text-xl font-bold text-[#1d342d] no-underline">
                         <span className="grid size-9 place-items-center rounded-md bg-[#237b65] text-sm font-bold text-white">Rx</span>
                         <span>RxStock</span>
                     </Link>
-                    <nav className="hidden sm:block" aria-label="Main navigation">
+                    <nav className="order-3 flex w-full items-center gap-4 sm:order-none sm:w-auto" aria-label="Main navigation">
                         <Link
                             href="/shop"
-                            aria-current="page"
-                            className="border-b-2 border-[#237b65] px-1 py-6 text-sm font-semibold text-[#237b65] no-underline"
+                            aria-current={currentPath === '/shop' ? 'page' : undefined}
+                            className={`border-b-2 px-1 py-2 text-sm no-underline ${currentPath === '/shop' ? 'border-[#237b65] font-semibold text-[#237b65]' : 'border-transparent font-medium text-[#59675f] hover:text-[#237b65]'}`}
                         >
                             Shop
+                        </Link>
+                        <Link
+                            href="/my-orders"
+                            aria-current={currentPath === '/my-orders' ? 'page' : undefined}
+                            className={`border-b-2 px-1 py-2 text-sm no-underline ${currentPath === '/my-orders' ? 'border-[#237b65] font-semibold text-[#237b65]' : 'border-transparent font-medium text-[#59675f] hover:text-[#237b65]'}`}
+                        >
+                            My orders
                         </Link>
                     </nav>
                 </div>
 
-                <div className="flex items-center gap-3 sm:gap-5">
+                <div className="ml-auto flex items-center gap-2 sm:gap-5">
                     <span className="hidden text-sm text-[#69766f] md:inline">Hi, {customerName}</span>
-                    <Link
-                        href="/wishlist"
-                        className="whitespace-nowrap text-sm font-semibold text-[#43524b] no-underline hover:text-[#237b65]"
-                    >
-                        Wishlist ({wishlistCount})
-                    </Link>
                     {onOpenCart && (
                         <button
                             type="button"

@@ -4,10 +4,9 @@ import CartDrawer from '../components/CartDrawer';
 import ProductCard from '../components/ProductCard';
 import ShopHeader from '../components/ShopHeader';
 
-export default function Shop({ customerName, products, categories, filters, cart, wishlistProductIds, wishlistCount, success }) {
+export default function Shop({ customerName, products, categories, filters, cart, success }) {
     const [cartOpen, setCartOpen] = useState(false);
     const [addingProductId, setAddingProductId] = useState(null);
-    const [updatingWishlistProductId, setUpdatingWishlistProductId] = useState(null);
     const { errors = {} } = usePage().props;
     const { data, setData } = useForm({
         search: filters.search ?? '',
@@ -57,22 +56,6 @@ export default function Shop({ customerName, products, categories, filters, cart
         });
     };
 
-    const toggleWishlist = (product) => {
-        const isWishlisted = wishlistProductIds.includes(product.id);
-        setUpdatingWishlistProductId(product.id);
-
-        const options = {
-            preserveScroll: true,
-            onFinish: () => setUpdatingWishlistProductId(null),
-        };
-
-        if (isWishlisted) {
-            router.delete(`/wishlist/${product.id}`, options);
-        } else {
-            router.post(`/wishlist/${product.id}`, {}, options);
-        }
-    };
-
     return (
         <>
             <Head title="Shop" />
@@ -80,7 +63,6 @@ export default function Shop({ customerName, products, categories, filters, cart
                 <ShopHeader
                     customerName={customerName}
                     cartCount={cart.itemCount}
-                    wishlistCount={wishlistCount}
                     onOpenCart={() => setCartOpen(true)}
                 />
 
@@ -191,9 +173,6 @@ export default function Shop({ customerName, products, categories, filters, cart
                                         product={product}
                                         onAdd={addToCart}
                                         adding={addingProductId === product.id}
-                                        isWishlisted={wishlistProductIds.includes(product.id)}
-                                        onToggleWishlist={toggleWishlist}
-                                        wishlistBusy={updatingWishlistProductId === product.id}
                                     />
                                 ))}
                             </div>

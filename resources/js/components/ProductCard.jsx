@@ -16,7 +16,7 @@ const categoryArtwork = [
 const defaultArtwork = 'https://images.unsplash.com/photo-1576602976047-174e57a47881?auto=format&fit=crop&w=900&q=85';
 const peso = new Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP' });
 
-export default function ProductCard({ product, onAdd, adding, isWishlisted, onToggleWishlist, wishlistBusy }) {
+export default function ProductCard({ product, onAdd, adding }) {
     const categoryName = product.category?.name ?? 'Pharmacy';
     const artwork = categoryArtwork.find(({ match }) => match.test(categoryName))?.image ?? defaultArtwork;
 
@@ -44,15 +44,6 @@ export default function ProductCard({ product, onAdd, adding, isWishlisted, onTo
                 <p className="mb-0 mt-2 line-clamp-2 min-h-10 text-sm leading-5 text-[#718078]">
                     {product.description || 'A pharmacy essential, ready for your routine.'}
                 </p>
-                <button
-                    type="button"
-                    onClick={() => onToggleWishlist(product)}
-                    aria-pressed={isWishlisted}
-                    disabled={wishlistBusy}
-                    className="mt-3 self-start border-0 bg-transparent p-0 text-sm font-semibold text-[#237b65] underline-offset-4 hover:underline disabled:cursor-wait disabled:opacity-60"
-                >
-                    {wishlistBusy ? 'Saving...' : isWishlisted ? 'Saved to wishlist' : 'Save to wishlist'}
-                </button>
                 <div className="mt-auto flex items-end justify-between gap-3 pt-4">
                     <p className="m-0 text-lg font-bold tabular-nums text-[#1d342d]">
                         {peso.format(Number(product.price))}
