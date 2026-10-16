@@ -18,7 +18,7 @@ export default function NotificationsIndex({ alerts }) {
         <AdminLayout title="Notifications">
             <Head title="Notifications | RxStock" />
 
-            <div className="mx-auto max-w-4xl">
+            <div className="w-full max-w-4xl">
                 <header className="mb-7 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
                     <div>
                         <p className="mb-2 mt-0 text-xs font-semibold uppercase text-[#71807b]">Inventory</p>

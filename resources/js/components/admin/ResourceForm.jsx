@@ -26,20 +26,23 @@ export default function ResourceForm({ resource, item, baseUrl, categories = [],
     };
 
     const optionSets = { categories, suppliers };
-    const cancelUrl = isEditing ? `${baseUrl}/${item.id}` : baseUrl;
 
     return (
         <AdminLayout title={title}>
             <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
                 <div>
-                    <p className="mb-2 mt-0 text-xs font-semibold uppercase text-[#71807b]">Inventory</p>
+                    <p className="mb-2 mt-0 text-xs font-semibold uppercase text-[#71807b]">
+                        <Link href={baseUrl} className="text-[#237b65] hover:underline">{definition.plural}</Link>
+                        <span className="px-1 text-[#9ba6a1]">/</span>
+                        {isEditing ? `Edit ${definition.singular}` : `New ${definition.singular}`}
+                    </p>
                     <h1 className="m-0 text-2xl font-bold text-[#26332f]">{title}</h1>
                     <p className="mb-0 mt-2 text-sm text-[#71807b]">
                         {isEditing ? `Update details for ${item.name}.` : `Enter details for the new ${definition.singular}.`}
                     </p>
                 </div>
-                <Link href={cancelUrl} className="w-fit rounded-md px-3 py-2 text-sm font-medium text-[#53615c] hover:bg-white hover:text-[#237b65]">
-                    Cancel
+                <Link href={baseUrl} className="w-fit rounded-md border border-[#d8e0dc] bg-white px-3 py-2 text-sm font-medium text-[#43524c] hover:bg-[#f8faf9]">
+                    Back to {definition.plural.toLowerCase()}
                 </Link>
             </div>
 
@@ -130,7 +133,7 @@ export default function ResourceForm({ resource, item, baseUrl, categories = [],
                     </div>
 
                     <div className="flex flex-wrap justify-end gap-3 border-t border-[#edf1ef] pt-5">
-                        <Link href={cancelUrl} className="rounded-md border border-[#d8e0dc] bg-white px-4 py-2.5 text-sm font-medium text-[#43524c] hover:bg-[#f8faf9]">
+                        <Link href={baseUrl} className="rounded-md border border-[#d8e0dc] bg-white px-4 py-2.5 text-sm font-medium text-[#43524c] hover:bg-[#f8faf9]">
                             Cancel
                         </Link>
                         <button

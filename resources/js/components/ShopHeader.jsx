@@ -47,7 +47,7 @@ export default function ShopHeader({ customerName, cartCount, onOpenCart }) {
                     <button
                         type="button"
                         onClick={() => router.post('/logout')}
-                        className="rounded-md border border-[#dce4df] bg-white px-3 py-2 text-sm font-semibold text-[#43524b] transition-colors hover:border-[#b9cec3] hover:bg-[#f7faf8] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#237b65]"
+                        className="rounded-md border border-[#f0d6d2] bg-white px-3 py-2 text-sm font-semibold text-[#b94343] transition-colors hover:border-[#e6b7a8] hover:bg-[#fff2ec] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#b94343]"
                     >
                         Log out
                     </button>

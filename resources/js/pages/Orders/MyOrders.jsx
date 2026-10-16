@@ -25,7 +25,8 @@ export default function MyOrders({ customerName, cart, orders }) {
                     onOpenCart={() => setCartOpen(true)}
                 />
 
-                <main className="mx-auto max-w-5xl px-5 pb-16 pt-8 sm:px-8 sm:pt-12">
+                <main className="mx-auto w-full max-w-7xl px-5 pb-16 pt-8 sm:px-8 sm:pt-12">
+                    <div className="max-w-5xl">
                     <header className="mb-8 flex flex-col gap-3 border-b border-[#e4e9e4] pb-6 sm:flex-row sm:items-end sm:justify-between">
                         <div>
                             <p className="mb-2 mt-0 text-xs font-bold uppercase text-[#237b65]">RxStock · Account</p>
@@ -97,6 +98,7 @@ export default function MyOrders({ customerName, cart, orders }) {
                             ) : null)}
                         </nav>
                     )}
+                    </div>
                 </main>
                 <CartDrawer
                     cart={cart}
