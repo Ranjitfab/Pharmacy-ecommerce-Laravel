@@ -7,14 +7,14 @@ export const resourceDefinitions = {
         emptyDescription: 'Add your first product to start tracking inventory.',
         deleteConfirmation: 'Delete this product?',
         fields: [
-            { name: 'name', label: 'Product name', type: 'text', required: true, wide: true },
+            { name: 'name', label: 'Product name', type: 'text', required: true, maxLength: 255, wide: true },
             { name: 'product_category_id', label: 'Category', type: 'select', required: true, options: 'categories', emptyLabel: 'Select a category' },
             { name: 'supplier_id', label: 'Supplier', type: 'select', options: 'suppliers', emptyLabel: 'Unassigned', optional: true },
             { name: 'price', label: 'Price', type: 'number', required: true, min: '0', step: '0.01' },
-            { name: 'stock', label: 'Stock', type: 'number', required: true, min: '0' },
-            { name: 'reorder_threshold', label: 'Reorder threshold', type: 'number', required: true, min: '0', defaultValue: 5 },
-            { name: 'dosage', label: 'Dosage', type: 'text', optional: true },
-            { name: 'strength', label: 'Strength', type: 'text', optional: true },
+            { name: 'stock', label: 'Stock', type: 'number', required: true, min: '0', integer: true },
+            { name: 'reorder_threshold', label: 'Reorder threshold', type: 'number', required: true, min: '0', integer: true, defaultValue: 5 },
+            { name: 'dosage', label: 'Dosage', type: 'text', optional: true, maxLength: 255 },
+            { name: 'strength', label: 'Strength', type: 'text', optional: true, maxLength: 255 },
             { name: 'expiration_date', label: 'Expiration date', type: 'date', optional: true },
             { name: 'requires_prescription', label: 'Requires prescription', type: 'checkbox', wide: true },
             { name: 'description', label: 'Description', type: 'textarea', optional: true, wide: true },
@@ -49,7 +49,7 @@ export const resourceDefinitions = {
         emptyDescription: 'Create a category before adding products.',
         deleteConfirmation: 'Delete this category? Its products will also be deleted.',
         fields: [
-            { name: 'name', label: 'Category name', type: 'text', required: true },
+            { name: 'name', label: 'Category name', type: 'text', required: true, maxLength: 255 },
             { name: 'description', label: 'Description', type: 'textarea', optional: true, wide: true },
         ],
         columns: [
@@ -72,10 +72,10 @@ export const resourceDefinitions = {
         emptyDescription: 'Add a supplier to connect products with their source.',
         deleteConfirmation: 'Delete this supplier? Associated products will become unassigned.',
         fields: [
-            { name: 'name', label: 'Supplier name', type: 'text', required: true, wide: true },
-            { name: 'contact_person', label: 'Contact person', type: 'text', optional: true },
-            { name: 'email', label: 'Email', type: 'email', optional: true },
-            { name: 'phone', label: 'Phone', type: 'tel', optional: true },
+            { name: 'name', label: 'Supplier name', type: 'text', required: true, maxLength: 255, wide: true },
+            { name: 'contact_person', label: 'Contact person', type: 'text', optional: true, maxLength: 255 },
+            { name: 'email', label: 'Email', type: 'email', optional: true, maxLength: 255 },
+            { name: 'phone', label: 'Phone', type: 'tel', optional: true, maxLength: 20 },
             { name: 'address', label: 'Address', type: 'textarea', optional: true, wide: true },
         ],
         columns: [

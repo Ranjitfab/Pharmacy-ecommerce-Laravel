@@ -1,12 +1,47 @@
 import { Head, Link, useForm } from '@inertiajs/react';
+import { validateField } from '../../validation';
+
+const registrationFields = {
+	name: { label: 'Name', required: true, maxLength: 255 },
+	email: { label: 'Email', type: 'email', required: true, maxLength: 255 },
+	password: { label: 'Password', required: true, minLength: 8 },
+	password_confirmation: { label: 'Confirm password', required: true, matches: 'password' },
+};
 
 export default function Register() {
-	const { data, setData, post, processing, errors } = useForm({
+	const { data, setData, post, processing, errors, setError, clearErrors } = useForm({
 		name: '',
 		email: '',
 		password: '',
 		password_confirmation: '',
 	});
+
+	const updateField = (fieldName, value) => {
+		const nextData = { ...data, [fieldName]: value };
+		setData(fieldName, value);
+
+		const error = validateField(registrationFields[fieldName], value, nextData);
+
+		if (error) {
+			setError(fieldName, error);
+		} else {
+			clearErrors(fieldName);
+		}
+
+		if (fieldName === 'password' && nextData.password_confirmation) {
+			const confirmationError = validateField(
+				registrationFields.password_confirmation,
+				nextData.password_confirmation,
+				nextData,
+			);
+
+			if (confirmationError) {
+				setError('password_confirmation', confirmationError);
+			} else {
+				clearErrors('password_confirmation');
+			}
+		}
+	};
 
 	const submit = (event) => {
 		event.preventDefault();
@@ -35,7 +70,7 @@ export default function Register() {
 								autoComplete="name"
 								required
 								value={data.name}
-								onChange={(event) => setData('name', event.target.value)}
+								onChange={(event) => updateField('name', event.target.value)}
 								aria-invalid={Boolean(errors.name)}
 								aria-describedby={errors.name ? 'name-error' : undefined}
 								className="box-border w-full rounded-lg border border-[#ddd] p-3 text-sm text-[#333] outline-none transition-colors duration-200 placeholder:text-[#777] focus:border-[#237b65] focus:ring-2 focus:ring-[#237b65]/15"
@@ -53,7 +88,7 @@ export default function Register() {
 								autoComplete="email"
 								required
 								value={data.email}
-								onChange={(event) => setData('email', event.target.value)}
+								onChange={(event) => updateField('email', event.target.value)}
 								aria-invalid={Boolean(errors.email)}
 								aria-describedby={errors.email ? 'email-error' : undefined}
 								className="box-border w-full rounded-lg border border-[#ddd] p-3 text-sm text-[#333] outline-none transition-colors duration-200 placeholder:text-[#777] focus:border-[#237b65] focus:ring-2 focus:ring-[#237b65]/15"
@@ -71,7 +106,7 @@ export default function Register() {
 								autoComplete="new-password"
 								required
 								value={data.password}
-								onChange={(event) => setData('password', event.target.value)}
+								onChange={(event) => updateField('password', event.target.value)}
 								aria-invalid={Boolean(errors.password)}
 								aria-describedby={errors.password ? 'password-error' : undefined}
 								className="box-border w-full rounded-lg border border-[#ddd] p-3 text-sm text-[#333] outline-none transition-colors duration-200 placeholder:text-[#777] focus:border-[#237b65] focus:ring-2 focus:ring-[#237b65]/15"
@@ -89,9 +124,12 @@ export default function Register() {
 								autoComplete="new-password"
 								required
 								value={data.password_confirmation}
-								onChange={(event) => setData('password_confirmation', event.target.value)}
+								aria-invalid={Boolean(errors.password_confirmation)}
+								aria-describedby={errors.password_confirmation ? 'password-confirmation-error' : undefined}
+								onChange={(event) => updateField('password_confirmation', event.target.value)}
 								className="box-border w-full rounded-lg border border-[#ddd] p-3 text-sm text-[#333] outline-none transition-colors duration-200 placeholder:text-[#777] focus:border-[#237b65] focus:ring-2 focus:ring-[#237b65]/15"
 							/>
+							{errors.password_confirmation && <p id="password-confirmation-error" role="alert" className="mt-1 text-sm text-red-600">{errors.password_confirmation}</p>}
 						</div>
 
 						<button

@@ -1,11 +1,28 @@
 import { Head, Link, useForm } from '@inertiajs/react';
+import { validateField } from '../../validation';
+
+const loginFields = {
+    email: { label: 'Email', type: 'email', required: true },
+    password: { label: 'Password', type: 'password', required: true },
+};
 
 export default function Login() {
-    const { data, setData, post, processing, errors } = useForm({
+    const { data, setData, post, processing, errors, setError, clearErrors } = useForm({
         email: '',
         password: '',
         remember: false,
     });
+
+    const updateField = (fieldName, value) => {
+        setData(fieldName, value);
+        const error = validateField(loginFields[fieldName], value);
+
+        if (error) {
+            setError(fieldName, error);
+        } else {
+            clearErrors(fieldName);
+        }
+    };
 
     const submit = (event) => {
         event.preventDefault();
@@ -36,7 +53,7 @@ export default function Login() {
                                 autoComplete="email"
                                 required
                                 value={data.email}
-                                onChange={(event) => setData('email', event.target.value)}
+                                onChange={(event) => updateField('email', event.target.value)}
                                 aria-invalid={Boolean(errors.email)}
                                 aria-describedby={errors.email ? 'email-error' : undefined}
                                 className="box-border w-full rounded-lg border border-[#ddd] p-3 text-sm text-[#333] outline-none transition-colors duration-200 placeholder:text-[#777] focus:border-[#237b65] focus:ring-2 focus:ring-[#237b65]/15"
@@ -60,7 +77,7 @@ export default function Login() {
                                 autoComplete="current-password"
                                 required
                                 value={data.password}
-                                onChange={(event) => setData('password', event.target.value)}
+                                onChange={(event) => updateField('password', event.target.value)}
                                 aria-invalid={Boolean(errors.password)}
                                 aria-describedby={errors.password ? 'password-error' : undefined}
                                 className="box-border w-full rounded-lg border border-[#ddd] p-3 text-sm text-[#333] outline-none transition-colors duration-200 placeholder:text-[#777] focus:border-[#237b65] focus:ring-2 focus:ring-[#237b65]/15"

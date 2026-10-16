@@ -1,6 +1,7 @@
 import { Link, useForm } from '@inertiajs/react';
 import AdminLayout from './AdminLayout';
 import { resourceDefinitions } from './resourceDefinitions';
+import { validateField } from '../../validation';
 
 const inputClassName = 'w-full rounded-md border border-[#d8e0dc] bg-white px-3 py-2.5 text-sm text-[#26332f] outline-none focus:border-[#237b65] focus:ring-2 focus:ring-[#237b65]/15';
 
@@ -11,7 +12,7 @@ export default function ResourceForm({ resource, item, baseUrl, categories = [],
         const value = item?.[field.name];
         return [field.name, field.type === 'checkbox' ? Boolean(value) : value ?? field.defaultValue ?? ''];
     }));
-    const { data, setData, post, put, processing, errors } = useForm(initialData);
+    const { data, setData, post, put, processing, errors, setError, clearErrors } = useForm(initialData);
     const title = `${isEditing ? 'Edit' : 'Add'} ${definition.singular}`;
 
     const submit = (event) => {
@@ -26,6 +27,18 @@ export default function ResourceForm({ resource, item, baseUrl, categories = [],
     };
 
     const optionSets = { categories, suppliers };
+    const updateField = (field, value) => {
+        const nextData = { ...data, [field.name]: value };
+        setData(field.name, value);
+
+        const error = validateField(field, value, nextData);
+
+        if (error) {
+            setError(field.name, error);
+        } else {
+            clearErrors(field.name);
+        }
+    };
 
     return (
         <AdminLayout title={title}>
@@ -69,7 +82,9 @@ export default function ResourceForm({ resource, item, baseUrl, categories = [],
                                                 name={field.name}
                                                 type="checkbox"
                                                 checked={Boolean(data[field.name])}
-                                                onChange={(event) => setData(field.name, event.target.checked)}
+                                                aria-invalid={Boolean(error)}
+                                                aria-describedby={error ? `${fieldId}-error` : undefined}
+                                                onChange={(event) => updateField(field, event.target.checked)}
                                             />
                                             {field.label}
                                         </label>
@@ -90,7 +105,7 @@ export default function ResourceForm({ resource, item, baseUrl, categories = [],
                                             name={field.name}
                                             rows="4"
                                             value={data[field.name]}
-                                            onChange={(event) => setData(field.name, event.target.value)}
+                                            onChange={(event) => updateField(field, event.target.value)}
                                             aria-invalid={Boolean(error)}
                                             aria-describedby={error ? `${fieldId}-error` : undefined}
                                             className={`${inputClassName} resize-y`}
@@ -101,7 +116,7 @@ export default function ResourceForm({ resource, item, baseUrl, categories = [],
                                             name={field.name}
                                             required={field.required}
                                             value={data[field.name] === '' ? '' : String(data[field.name])}
-                                            onChange={(event) => setData(field.name, event.target.value)}
+                                            onChange={(event) => updateField(field, event.target.value)}
                                             aria-invalid={Boolean(error)}
                                             aria-describedby={error ? `${fieldId}-error` : undefined}
                                             className={inputClassName}
@@ -118,9 +133,10 @@ export default function ResourceForm({ resource, item, baseUrl, categories = [],
                                             type={field.type}
                                             required={field.required}
                                             min={field.min}
+                                            maxLength={field.maxLength}
                                             step={field.step}
                                             value={data[field.name]}
-                                            onChange={(event) => setData(field.name, event.target.value)}
+                                            onChange={(event) => updateField(field, event.target.value)}
                                             aria-invalid={Boolean(error)}
                                             aria-describedby={error ? `${fieldId}-error` : undefined}
                                             className={inputClassName}
